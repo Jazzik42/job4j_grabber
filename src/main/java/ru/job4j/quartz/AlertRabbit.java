@@ -42,13 +42,15 @@ public class AlertRabbit {
         try {
             propertiesRead();
             init();
+            createTable();
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
-            String createTable = String.format("create table rabbit(%s);",
-                    "created_date timestamp");
+            String insertData = (String.format("insert into rabbit(%s) values ('%s');",
+                    "created_date", Timestamp.valueOf(
+                            LocalDateTime.now().withNano(0))));
             JobDataMap data = new JobDataMap();
             data.put("connection", con);
-            data.put("create", createTable);
+            data.put("insertData", insertData);
             JobDetail job = newJob(Rabbit.class)
                     .usingJobData(data)
                     .build();
@@ -60,11 +62,17 @@ public class AlertRabbit {
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             scheduler.shutdown();
         } catch (Exception se) {
             se.printStackTrace();
         }
+    }
+
+    private static void createTable() throws SQLException {
+        String createTable = String.format("create table rabbit(%s);",
+                "created_date timestamp");
+        con.prepareStatement(createTable).execute();
     }
 
     public static class Rabbit implements Job {
@@ -78,12 +86,8 @@ public class AlertRabbit {
             System.out.println("Rabbit runs here ...");
             Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
             try {
-                String insertData = (String.format("insert into rabbit(%s) values ('%s');",
-                        "created_date", Timestamp.valueOf(
-                                LocalDateTime.now().withNano(0))));
-                String createTable = (String) context.getJobDetail().getJobDataMap().get("create");
+                String insertData = (String) context.getJobDetail().getJobDataMap().get("insertData");
                 Statement a = connection.createStatement();
-                a.execute(createTable);
                 a.execute(insertData);
             } catch (Exception e) {
                 e.printStackTrace();
