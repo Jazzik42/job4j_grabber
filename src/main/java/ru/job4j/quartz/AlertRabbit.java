@@ -6,8 +6,6 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.*;
@@ -72,7 +70,9 @@ public class AlertRabbit {
     private static void createTable() throws SQLException {
         String createTable = String.format("create table rabbit(%s);",
                 "created_date timestamp");
-        con.prepareStatement(createTable).execute();
+        try (PreparedStatement pS = con.prepareStatement(createTable)) {
+            pS.execute();
+        }
     }
 
     public static class Rabbit implements Job {
@@ -85,9 +85,8 @@ public class AlertRabbit {
         public void execute(JobExecutionContext context) throws JobExecutionException {
             System.out.println("Rabbit runs here ...");
             Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
-            try {
+            try (Statement a = connection.createStatement()) {
                 String insertData = (String) context.getJobDetail().getJobDataMap().get("insertData");
-                Statement a = connection.createStatement();
                 a.execute(insertData);
             } catch (Exception e) {
                 e.printStackTrace();
