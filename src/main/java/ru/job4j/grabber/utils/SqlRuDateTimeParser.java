@@ -10,7 +10,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
-    private static final Map<String, Integer> MONTHS = new HashMap<>();
+    private static final Map<String, Integer> MONTHS = Map.ofEntries(
+            Map.entry("янв", 1),
+            Map.entry("фев", 2),
+            Map.entry("мар", 3),
+            Map.entry("апр", 4),
+            Map.entry("май", 5),
+            Map.entry("июн", 6),
+            Map.entry("июл", 7),
+            Map.entry("авг", 8),
+            Map.entry("сен", 9),
+            Map.entry("окт", 10),
+            Map.entry("ноя", 11),
+            Map.entry("дек", 12)
+    );
 
     @Override
     public LocalDateTime parse(String parse) {
@@ -34,18 +47,6 @@ public class SqlRuDateTimeParser implements DateTimeParser {
     }
 
     private static int getMonth(String month) {
-        MONTHS.put("янв", 1);
-        MONTHS.put("фев", 2);
-        MONTHS.put("мар", 3);
-        MONTHS.put("апр", 4);
-        MONTHS.put("май", 5);
-        MONTHS.put("июн", 6);
-        MONTHS.put("июл", 7);
-        MONTHS.put("авг", 8);
-        MONTHS.put("сен", 9);
-        MONTHS.put("окт", 10);
-        MONTHS.put("ноя", 11);
-        MONTHS.put("дек", 12);
         return MONTHS.get(month);
     }
 
