@@ -3,7 +3,6 @@ package ru.job4j.html;
 import java.time.LocalDateTime;
 
 public class Post {
-    private int id;
     private String title;
     private String link;
     private String description;
@@ -19,7 +18,6 @@ public class Post {
     @Override
     public String toString() {
         return "Post{"
-                + "id=" + id
                 + ", title='" + title + '\''
                 + ", link='" + link + '\''
                 + ", description='" + description + '\''
