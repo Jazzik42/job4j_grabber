@@ -1,9 +1,10 @@
-package ru.job4j.html;
+package ru.job4j.grabber;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.job4j.grabber.utils.DateTimeParser;
 import ru.job4j.grabber.utils.SqlRuDateTimeParser;
 
 import java.io.IOException;
@@ -12,9 +13,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class SqlRuParse implements Parse {
-    private final SqlRuDateTimeParser dateParser;
+    private final DateTimeParser dateParser;
 
-    public SqlRuParse(SqlRuDateTimeParser dateParser) {
+    public SqlRuParse(DateTimeParser dateParser) {
         this.dateParser = dateParser;
     }
 
@@ -45,7 +46,7 @@ public class SqlRuParse implements Parse {
             String date = page1.select("td[class=msgFooter]").first().text().split(" \\[")[0];
             String descriptionText = page1.select("td[class=msgBody]").last().text();
 
-            post = new Post(titleText, descriptionText, link,
+            post = new Post(titleText, link, descriptionText,
                     dateParser.parse(date));
         }
         return post;
