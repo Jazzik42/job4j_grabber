@@ -16,6 +16,13 @@ public class Post {
         this.description = description;
         this.created = created;
     }
+    public Post(int id, String title, String link, String description, LocalDateTime created) {
+        this.id = id;
+        this.title = title;
+        this.link = link;
+        this.description = description;
+        this.created = created;
+    }
 
     public int getId() {
         return id;
@@ -59,7 +66,7 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post{"
+        return "Post{" + "id='" + id + '\''
                 + ", title='" + title + '\''
                 + ", link='" + link + '\''
                 + ", description='" + description + '\''
